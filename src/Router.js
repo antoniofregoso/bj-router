@@ -96,7 +96,7 @@ export class Router {
         let qs = null;
 
         let routerObj = {
-            store: this.store,
+            //store: this.store,
             i18n:this.getLang(),
             setContext: this.setContext,
             pathFor: (name, parameter)=>{
