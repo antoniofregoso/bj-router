@@ -1,7 +1,4 @@
-import {
-    Utils,
-    ArgumentNotFoundError as ArgNotFound, ArgumentTypeError as ArgTypeError
-} from "./utils.js";
+import {Utils, ArgumentNotFoundError as ArgNotFound, ArgumentTypeError as ArgTypeError } from "./utils.js";
 
 
 export class Router {
