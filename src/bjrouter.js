@@ -36,7 +36,6 @@ export class bjRouter {
             name: null,
             current: false
         }
-
         if(this._caseInsensitive) {
             uri = uri.toLowerCase()
         };      
@@ -83,7 +82,9 @@ export class bjRouter {
         return navigator.language.substring(0,2)
     }
 
-    init(){  
+    route(){
+                 
+
         this.routes.forEach((route)=>{
             this.#proccessRegExp(route);
         });
@@ -93,7 +94,6 @@ export class bjRouter {
         let qs = null;
 
         let routerObj = {
-            //store: this.store,
             i18n:this.getLang(),
             setContext: this.setContext,
             pathFor: (name, parameter)=>{
@@ -135,6 +135,15 @@ export class bjRouter {
                 return this.notFoundHandler(this, key)
             }
         }
+    }
+
+    init(){  
+        this.route();
+        if (this.config.hashSensitive) {
+            window.addEventListener('hashchange', ()=>{
+                this.route();
+            });
+        }  
 
     }
 
