@@ -7,7 +7,12 @@ export class bjRouter {
     store = null;
     dispatch = null;
 
-
+    /**
+     * 
+     * @param {Object} options 
+     *  @param {boolean} [optioms.hashSensitive=false] - If set to true the router will respond to the #hashe in the urls
+     *  @param {boolean} [options.caseInsensitive=true] - If set to false, uri matching will be case sensitive.
+     */
     constructor(options){
         this.routes = [];
         this.default = {
@@ -19,7 +24,13 @@ export class bjRouter {
        
     };
 
- 
+    /**
+     * Th on  method is used in assigning routes to your application
+     * @method
+     * @param {string} uri - uri route to be matched
+     * @param {function} callback callback a callback function to be invoked if the route has been matched.
+     * @returns 
+     */
     on(uri, callback){        
         if(!Utils.isSet(uri)) throw new ArgNotFound("uri")
         if(!Utils.isSet(callback)) throw new ArgNotFound("callback");
@@ -50,6 +61,10 @@ export class bjRouter {
         return this;
     }
 
+    /**
+     * @method
+     * @param {function} page - Callback function to render on error 404
+     */
     onNotFound(page){
         if(typeof page !== "function") throw new TypeError('typeof callback must be a function'); 
         this.notFoundHandler = page;
@@ -66,7 +81,10 @@ export class bjRouter {
         return props;
     }
 
-
+    /**
+     * @method
+     * @param {string} page - Name of page not found
+     */
     notFoundDefault(page){
         document.title = "Error 404 | Funnels Router"
         document.body.innerHTML =  /* html */`
@@ -76,14 +94,29 @@ export class bjRouter {
         `
     }
 
+    /**
+     * 
+     * @returns {string}  - Browser language in 3 character format
+     */
     getLang(){
         if (navigator.languages != undefined) 
           return navigator.languages[0].substring(0,2)
         return navigator.language.substring(0,2)
     }
 
-    route(){
-                 
+    /**
+     * @method
+     * Create the routing table as an array
+     * @example
+     * const App = new bjRouter({hashSensitive:true});
+     * App.on("/", homeCallback);
+     * App.on("/about", aboutCallback).setName("about");
+     * App.on("/contact", contactCallback).setName("contact");
+     * App.on.notFoundHandler(myNotFoundHandler);
+     * App.init();
+     * @returns Callback to render the page
+     */
+    route(){                 
 
         this.routes.forEach((route)=>{
             this.#proccessRegExp(route);
@@ -137,16 +170,26 @@ export class bjRouter {
         }
     }
 
+    /**
+     * Initialize the router and if the -hashSensitive- option is activated add the -hashchange- event
+     */
     init(){  
         this.route();
         if (this.config.hashSensitive) {
             window.addEventListener('hashchange', ()=>{
                 this.route();
             });
-        }  
+        } 
 
     }
 
+        /**
+         * @method
+         * @param {string} name -route name
+         * @example
+         * App.on("/user/login", contactCallback).setName("user-login");
+         * console.log(App.pathFor("user-login")) // output: /user/login
+         */
     setName(name){
         if(!Utils.isSet(name)) throw new ArgNotFound("name");
         if(!Utils.isString(name)) throw new ArgTypeError("name", "string", name);
@@ -159,6 +202,19 @@ export class bjRouter {
         return this;
     }
 
+    /**
+     * @method
+     * Match the uri route where a parameter name matches a regular expression. This method must be chained to the
+     * ''App.on'' method.
+     * @param {*} name name parameter name to match
+     * @param {*} regExp regExp regular expression pattern but must be in string format, without front slashes that converts
+     * it to a regExp object. E.g "0-9", "[A-Z]". See example below  
+     * Special characters which you wish to escape with the backslash must be double escaped. E.g "\\\w" instead of "\w";
+     * @example
+     *  App.on("/{page-name}/{id}", callBackFunction).where("id","[0-9]+");
+     * this route will match my-site.com/user/10, my-site.com/user/15
+     * it won't match my-site.com/admin/10, my-site.com/user/login
+     */ 
     where(name, regExp){
         if(!Utils.isSet(name)) throw new ArgNotFound("name");
         if(!Utils.isSet(regExp)) throw new ArgNotFound("regExp");
