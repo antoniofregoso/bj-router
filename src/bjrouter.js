@@ -120,7 +120,7 @@ export class bjRouter {
 
         this.routes.forEach((route)=>{
             this.#proccessRegExp(route);
-        });
+        }, this);
 
         let found = false;
         let key = null;
