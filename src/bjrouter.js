@@ -116,8 +116,7 @@ export class bjRouter {
      * App.init();
      * @returns Callback to render the page
      */
-    route(){                 
-
+    route(){  
         this.routes.forEach((route)=>{
             this.#proccessRegExp(route);
         }, this);
@@ -286,11 +285,10 @@ export class bjRouter {
 
     #proccessRegExp(route){
         let regExp = route.uri;
-
-        regExp = regExp.replace(/\//g, "\\/");
-        regExp = regExp.replace(/\./g, "\\.");
-        regExp = regExp.replace("/", "/?");
-
+        //regExp = regExp.replace(/\//g, "\\/");
+        //regExp = regExp.replace(/\./g, "\\.");
+        //regExp = regExp.replace("/", "/?");
+        console.log('parametro', route.parameters)
         if(this.#containsParameter(route.uri)){
             regExp.replace(/{\w+}/g, (parameter)=>{
                 let parameterName = parameter.replace("{","");
@@ -303,12 +301,15 @@ export class bjRouter {
                 });
                 return parameter;
             });
+            console.log('parametro', regExp)
             regExp = `^${regExp}$`;
-            console.log('RegExp', regExp)
-            route.regExp = new RegExp(regExp);
+            console.log('RegExpggggggggggg', regExp)
+            route.regExp = RegExp(regExp);
+            console.log('RegExpggggggggggg', route.regExp)
             return route;
         }else{
             route.regExp = RegExp(`^${route.uri}$`)
+            console.log('RegExp', route.regExp)
             return route;
         }
     }
