@@ -285,9 +285,6 @@ export class bjRouter {
 
     #proccessRegExp(route){
         let regExp = route.uri;
-        //regExp = regExp.replace(/\//g, "\\/");
-        //regExp = regExp.replace(/\./g, "\\.");
-        //regExp = regExp.replace("/", "/?");
         console.log('parametro', route.parameters)
         if(this.#containsParameter(route.uri)){
             regExp.replace(/{\w+}/g, (parameter)=>{
@@ -303,9 +300,7 @@ export class bjRouter {
             });
             console.log('parametro', regExp)
             regExp = `^${regExp}$`;
-            console.log('RegExpggggggggggg', regExp)
-            route.regExp = RegExp(regExp);
-            console.log('RegExpggggggggggg', route.regExp)
+            route.regExp = new RegExp(regExp);
             return route;
         }else{
             route.regExp = RegExp(`^${route.uri}$`)
