@@ -298,15 +298,12 @@ export class bjRouter {
                 });
                 return parameter;
             });
-            console.log('parametro', regExp)
-            regExp = `^${regExp}$`;
-            route.regExp = new RegExp(regExp);
-            return route;
-        }else{
-            route.regExp = RegExp(`^${route.uri}$`)
-            console.log('RegExp', route.regExp)
-            return route;
         }
+        regExp = `^${regExp}$`;
+        console.log('*******************************')
+        console.log(regExp)
+        route.regExp = new RegExp(regExp);
+        return route;
     }
 
     #pathFor(name, parameters = {}){
