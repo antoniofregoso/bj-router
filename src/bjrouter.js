@@ -49,7 +49,8 @@ export class bjRouter {
         }
         if(this._caseInsensitive) {
             uri = uri.toLowerCase()
-        };      
+        };  
+        uri = uri.startsWith("/") ? uri : `/${uri}`;    
         this.routes.forEach(route=>{
             if(route.uri === uri) throw new Error(`the uri ${route.uri} already exists`);
         });
@@ -228,7 +229,8 @@ export class bjRouter {
         regExp = regExp.replace(/\)/g,"\\)");
 
         regExp = `(${regExp}+)`;
-
+        console.log('?????????????????????????????????????');
+        console.log(route.parameters);
         let parameterFound = false;
         route.parameters.forEach((parameter, index)=>{
             if(parameter[name] !== undefined){
@@ -285,7 +287,11 @@ export class bjRouter {
 
     #proccessRegExp(route){
         let regExp = route.uri;
-        console.log('parametro', route.parameters)
+        console.log('uri: ', route.uri)
+        // escape special characters
+        regExp = regExp.replace(/\//g, "\\/");
+        regExp = regExp.replace(/\./g, "\\.");
+        regExp = regExp.replace("/", "/?");
         if(this.#containsParameter(route.uri)){
             regExp.replace(/{\w+}/g, (parameter)=>{
                 let parameterName = parameter.replace("{","");
@@ -300,8 +306,6 @@ export class bjRouter {
             });
         }
         regExp = `^${regExp}$`;
-        console.log('*******************************')
-        console.log(regExp)
         route.regExp = new RegExp(regExp);
         return route;
     }
